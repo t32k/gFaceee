@@ -1,0 +1,9 @@
+.title {
+  margin-left:25px;
+}
+.avatar {
+  position: absolute;
+  top: 13px;
+  left: 40px;
+  border-radius: 2px;
+}

@@ -1,4 +1,3 @@
-gFace
-=====
+#gFace
 
-News Feed Avatar on GitHub.
+Chrome Extensions.
