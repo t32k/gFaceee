@@ -3,7 +3,6 @@
 }
 .avatar {
   position: absolute;
-  top: 13px;
-  left: 40px;
+  top: 13px; left: 40px;
   border-radius: 2px;
 }

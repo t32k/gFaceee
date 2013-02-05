@@ -1,7 +1,8 @@
 $('.title').each(function(){
-	var $title = $(this);
-	var path = $title.find('a').eq(0).attr('href');
-	console.log(path);
+
+	var $title = $(this),
+		path = $title.find('a').eq(0).attr('href');
+
 	$.ajax({
 		method: 'GET',
 		url: path,
@@ -12,4 +13,5 @@ $('.title').each(function(){
 		var $avatar = $('<img src="'+ avatarUrls + '" width="20" height="20" class="avatar" alt="">');
 		$title.before($avatar);
 	});
+	
 });
