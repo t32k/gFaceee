@@ -1,5 +1,7 @@
 # gFaces
 
+![Screen Shot](https://raw.github.com/t32k/gFaces/master/img/_preview.png "Preview")
+
 This is a Chrome Extensions for [GitHub News Feed](https://github.com/).
 
 ## Dependencies
