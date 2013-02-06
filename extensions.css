@@ -1,8 +1,21 @@
 .simple > .title {
   margin-left: 25px;
 }
+.simple:after {
+  content: "";
+  display: block;
+  z-index: 0;
+  position: absolute;
+  width: 18px; height: 18px;
+  top: 14px; left: 41px;
+  border-radius: 2px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAzFBMVEXKysrJycnKysrIyMjHx8f////Ly8vGxsbCwsLBwcHExMTDw8PKysrIyMi/v7/AwMDFxcXHx8fi4uLz8/P9/f3q6ura2tr09PTJycnk5OTc3Nz6+vrg4ODNzc3X19fW1tb+/v7v7+/u7u6+vr7Y2Njj4+Py8vLV1dXQ0ND19fXn5+fl5eXZ2dne3t7d3d34+Pjo6Oi4uLjt7e3S0tLm5ubb29v7+/v5+fm8vLzh4eHs7Ozf39/x8fHr6+v39/fMzMzU1NS5ubnR0dHPz8+G+rHnAAAABXRSTlPy8uXy8gbg2eQAAAELSURBVHheTdHVksMwDAXQpF3JCEEoM+My8///06pOO7P3ST4jW2M7aATnhGFYF0T6FIwFjxgXDP0yIMXKVe18nr7s0BkkI0Rj23BO4hh6rGwLytrSYe7MCdEVsLmezoppt/i+h8QiITMZrCdKCC746ZyeJHQ7gIJrn1gfYGMJ+Q2slKkRJwmUUTNoshLeVKXr0LaOviJMhyt56bTd7EAYqvyh8/VUt0o37oxYkwZ1IctuRYRac3kHcHQ0KEKY5/BRiEgfHwFgqQjRPsP+teybnkzJ1tZf07h32H4u2wPdAhjx2CMylwDs+4veGFoqQo8ajfuZDfqL3+3AxVg/JwWlM4haKu3z/zsuVeMPTfAXfvNsNFwAAAAASUVORK5CYII=);
+  background-size: 100%;
+}
 .g-avatar {
   position: absolute;
+  z-index: 1;
   top: 13px; left: 40px;
+  width: 20px; height: 20px;
   border-radius: 2px;
 }

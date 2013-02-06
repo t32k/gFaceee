@@ -1,6 +1,5 @@
 var paths = [],
-    sync = chrome.storage.sync,
-    defaultPath = chrome.extension.getURL('img/default_avatar.png');
+    sync = chrome.storage.sync;
 
 function showAvatar() {
     $('.simple > .title').each(function () {
@@ -8,18 +7,17 @@ function showAvatar() {
         var $title = $(this),
             path = $title.find('a').eq(0).attr('href'),
             pathKey = path.replace(/\//, ''),
+            hasAvatar = $title.prev('img').get(0),
             storageData = {};
 
         // 重複アカウントチェックchrome.storage参照
         if (_.include(paths, path)) {
             sync.get(pathKey, function (val) {
-                var $avatar;
-                if (val[pathKey]) {
-                    $avatar = $('<img src="' + val[pathKey] + '" width="20" height="20" class="g-avatar" alt="">');
-                } else {
-                    $avatar = $('<img src="' + defaultPath + '" width="20" height="20" class="g-avatar" alt="">');
+                // chrome.storageにvalueが存在し、かつavatarを有してないもの
+                if (val[pathKey] && !hasAvatar) {
+                    var $avatar = $('<img src="' + val[pathKey] + '" class="g-avatar" alt="">');
+                    $title.before($avatar);
                 }
-                $title.before($avatar);
             });
         } else {
             $.ajax({
@@ -29,9 +27,9 @@ function showAvatar() {
             }).done(function (data) {
                 var avatarSrc = $(data).find('.avatared img').attr('src');
                 var avatarUrl = avatarSrc.replace('s=420', 's=140');
-                var $avatar = $('<img src="' + avatarUrl + '" width="20" height="20" class="g-avatar" alt="">');
+                var $avatar = $('<img src="' + avatarUrl + '" class="g-avatar" alt="">');
                 $title.before($avatar);
-                // chrome.storagesにpathを貯めとく
+                // chrome.storageにpathを貯めとく
                 storageData[pathKey] = avatarUrl;
                 sync.set(storageData);
             });
