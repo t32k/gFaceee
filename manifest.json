@@ -1,6 +1,6 @@
 {
     "name": "gFaces",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Display avatar following on GitHub News Feed.",
     "permissions": ["storage", "*://*.github.com/*"],
     "icons": {
@@ -13,6 +13,9 @@
         "css": ["extensions.css"],
         "js": ["lib/jquery.js", "lib/underscore.js", "extensions.js"]
     }],
+    "web_accessible_resources": [
+        "img/default_avatar.png"
+    ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "manifest_version": 2
 }

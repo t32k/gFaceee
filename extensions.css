@@ -1,7 +1,7 @@
-.title {
-  margin-left:25px;
+.simple > .title {
+  margin-left: 25px;
 }
-.avatar {
+.g-avatar {
   position: absolute;
   top: 13px; left: 40px;
   border-radius: 2px;

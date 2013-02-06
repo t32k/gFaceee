@@ -1,8 +1,9 @@
-var sync = chrome.storage.sync,
-    paths = [];
+var paths = [],
+    sync = chrome.storage.sync,
+    defaultPath = chrome.extension.getURL('img/default_avatar.png');
 
-function displayAvatar() {
-    $('.title').each(function () {
+function showAvatar() {
+    $('.simple > .title').each(function () {
 
         var $title = $(this),
             path = $title.find('a').eq(0).attr('href'),
@@ -12,7 +13,12 @@ function displayAvatar() {
         // 重複アカウントチェックchrome.storage参照
         if (_.include(paths, path)) {
             sync.get(pathKey, function (val) {
-                var $avatar = $('<img src="' + val[pathKey] + '" width="20" height="20" class="avatar" alt="">');
+                var $avatar;
+                if (val[pathKey]) {
+                    $avatar = $('<img src="' + val[pathKey] + '" width="20" height="20" class="g-avatar" alt="">');
+                } else {
+                    $avatar = $('<img src="' + defaultPath + '" width="20" height="20" class="g-avatar" alt="">');
+                }
                 $title.before($avatar);
             });
         } else {
@@ -23,7 +29,7 @@ function displayAvatar() {
             }).done(function (data) {
                 var avatarSrc = $(data).find('.avatared img').attr('src');
                 var avatarUrl = avatarSrc.replace('s=420', 's=140');
-                var $avatar = $('<img src="' + avatarUrl + '" width="20" height="20" class="avatar" alt="">');
+                var $avatar = $('<img src="' + avatarUrl + '" width="20" height="20" class="g-avatar" alt="">');
                 $title.before($avatar);
                 // chrome.storagesにpathを貯めとく
                 storageData[pathKey] = avatarUrl;
@@ -35,11 +41,11 @@ function displayAvatar() {
 }
 
 // 初期ロード実行
-displayAvatar();
+showAvatar();
 
-// [More]ボタンクリックイベント定義
-$('.news').on('click', '.ajax_paginate > a', function () {
-    setTimeout(function () {
-        displayAvatar();
-    }, 500);
-});
+// [More]読み込み監視
+var node = document.getElementsByClassName('news')[0],
+    observer = new WebKitMutationObserver(function () {
+        showAvatar();
+    });
+observer.observe(node, { childList: true });
