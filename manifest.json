@@ -1,8 +1,8 @@
 {
-  "name" : "gFace",
-  "version" : "0.2.0",
+  "name" : "gFaces",
+  "version" : "0.3.0",
   "description" : "Display avatar following on GitHub News Feed.",
-  "permissions": [ "tabs", "storage", "http://*/*", "https://*/*" ],
+  "permissions": [ "storage", "*://*.github.com/*" ],
   "icons": { "16": "img/icon16.png", "48": "img/icon48.png", "128": "img/icon128.png" },
   "content_scripts": [
     {
