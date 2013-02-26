@@ -13,6 +13,7 @@ This is a Chrome Extensions for [GitHub News Feed](https://github.com/).
 
 ## Release History
 
++ 2013/02/26 - v0.5.1 - Rename.
 + 2013/02/07 - v0.5.0 - Set default avatar, fix duplicate operation.
 + 2013/02/06 - v0.4.0 - Fix bugs.
 + 2013/02/06 - v0.3.0 - Fix a bug load more.
