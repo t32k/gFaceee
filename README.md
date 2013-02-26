@@ -1,6 +1,6 @@
 # gFaces
 
-![Screen Shot](https://raw.github.com/t32k/gFaces/master/img/_preview.png "Preview")
+![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
 
 + [Chrome Web Store - gFaces](https://chrome.google.com/webstore/detail/gfaces/fgkdbhnipaaeokfjgdmpejglfepclgbk)
 
