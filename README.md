@@ -1,4 +1,4 @@
-# gFaces
+# gFaceee
 
 ![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
 
