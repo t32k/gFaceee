@@ -1,10 +1,12 @@
 # gFaceee
 
+> This is a Chrome Extensions for [GitHub News Feed](https://github.com/).
+
 ![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
 
-+ [Chrome Web Store - gFaces](https://chrome.google.com/webstore/detail/gfaces/fgkdbhnipaaeokfjgdmpejglfepclgbk)
++ [Chrome Web Store - gFaceee](https://chrome.google.com/webstore/detail/gfaces/fgkdbhnipaaeokfjgdmpejglfepclgbk)
 
-This is a Chrome Extensions for [GitHub News Feed](https://github.com/).
+
 
 ## Dependencies
 
