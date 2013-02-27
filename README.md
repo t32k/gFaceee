@@ -4,14 +4,9 @@
 
 ![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
 
+## Download
+
 + [Chrome Web Store - gFaceee](https://chrome.google.com/webstore/detail/gfaces/fgkdbhnipaaeokfjgdmpejglfepclgbk)
-
-
-
-## Dependencies
-
-+ [jQuery](http://jquery.com/) 
-+ [Underscore.js](http://underscorejs.org/)
 
 ## Release History
 
