@@ -1,7 +1,7 @@
 .simple > .title {
   margin-left: 25px;
 }
-.simple:after {
+.body .simple:after {
   content: "";
   display: block;
   z-index: 0;
@@ -18,4 +18,8 @@
   top: 13px; left: 40px;
   width: 20px; height: 20px;
   border-radius: 2px;
+}
+.news .alert:first-child .body .g-avatar,
+.news .alert:first-child .body .simple:after {
+  top: 0;
 }
