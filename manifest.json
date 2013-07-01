@@ -9,7 +9,7 @@
         "128": "icon128.png"
     },
     "content_scripts": [{
-        "matches": ["*://*.github.com/"],
+        "matches": ["*://github.com/"],
         "css": ["contents.css"],
         "js": ["lib/jquery.js", "lib/underscore.js", "contents.js"]
     }],

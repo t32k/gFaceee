@@ -10,6 +10,7 @@
 
 ## Release History
 
++ 2013/07/01 - v0.5.4 - Fix DOM Exception Error.
 + 2013/06/06 - v0.5.3 - Fix first avatar position.
 + 2013/03/23 - v0.5.2 - Fix icon dir.
 + 2013/02/26 - v0.5.1 - Rename.
