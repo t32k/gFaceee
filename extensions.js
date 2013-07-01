@@ -42,8 +42,10 @@ function showAvatar() {
 showAvatar();
 
 // [More]読み込み監視
-var node = document.getElementsByClassName('news')[0],
+var node = document.querySelector('.news'),
     observer = new WebKitMutationObserver(function () {
         showAvatar();
     });
-observer.observe(node, { childList: true });
+if(node) {
+    observer.observe(node, { childList: true });
+}
