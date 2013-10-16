@@ -1,21 +1,33 @@
 var paths = [],
     sync = chrome.storage.sync;
+    $dashboard = $("#dashboard");
+
+function createAvatar(src) {
+    var $avatar = $(document.createElement('img'));
+    $avatar.addClass('g-avatar');
+    $avatar.attr('src', src);
+    return $avatar;
+}
 
 function showAvatar() {
-    $('.simple > .title').each(function () {
+    $dashboard.find('.simple > .title').each(function() {
 
         var $title = $(this),
-            path = $title.find('a').eq(0).attr('href'),
+            $avatar = null,
+
+            // 遷移先（プロフィールページのURL）
+            path = $title.find('a').attr('href'),
             pathKey = path.replace(/\//, ''),
-            hasAvatar = $title.prev('img').get(0),
+
+            // 同期するデータ
             storageData = {};
 
         // 重複アカウントチェックchrome.storage参照
         if (_.include(paths, path)) {
-            sync.get(pathKey, function (val) {
+            sync.get(pathKey, function(items) {
                 // chrome.storageにvalueが存在し、かつavatarを有してないもの
-                if (val[pathKey] && !hasAvatar) {
-                    var $avatar = $('<img src="' + val[pathKey] + '" class="g-avatar" alt="">');
+                if (_.has(items, pathKey) && !$title.prev('img').get(0)) {
+                    $avatar = createAvatar(items[pathKey]);
                     $title.before($avatar);
                 }
             });
@@ -25,10 +37,13 @@ function showAvatar() {
                 url: path,
                 dataType: 'html'
             }).done(function (data) {
-                var avatarSrc = $(data).find('.avatared img').attr('src');
-                var avatarUrl = avatarSrc.replace('s=420', 's=140');
-                var $avatar = $('<img src="' + avatarUrl + '" class="g-avatar" alt="">');
+                // アバター画像のパスの生成
+                var avatarUrl = $(data).find('.avatar').attr('src').replace('s=420', 's=140');
+                
+                // <img>を生成
+                $avatar = createAvatar(avatarUrl);
                 $title.before($avatar);
+
                 // chrome.storageにpathを貯めとく
                 storageData[pathKey] = avatarUrl;
                 sync.set(storageData);
@@ -42,10 +57,10 @@ function showAvatar() {
 showAvatar();
 
 // [More]読み込み監視
-var node = document.querySelector('.news'),
-    observer = new WebKitMutationObserver(function () {
+var node = document.querySelector('.news');
+if(node) {
+    var observer = new WebKitMutationObserver(function () {
         showAvatar();
     });
-if(node) {
     observer.observe(node, { childList: true });
 }
