@@ -1,66 +1,65 @@
-var paths = [],
-    sync = chrome.storage.sync;
-    $dashboard = $("#dashboard");
+(function() {
 
-function createAvatar(src) {
-    var $avatar = $(document.createElement('img'));
-    $avatar.addClass('g-avatar');
-    $avatar.attr('src', src);
-    return $avatar;
-}
-
-function showAvatar() {
-    $dashboard.find('.simple > .title').each(function() {
-
-        var $title = $(this),
-            $avatar = null,
-
-            // 遷移先（プロフィールページのURL）
-            path = $title.find('a').attr('href'),
-            pathKey = path.replace(/\//, ''),
-
-            // 同期するデータ
-            storageData = {};
-
-        // 重複アカウントチェックchrome.storage参照
-        if (_.include(paths, path)) {
-            sync.get(pathKey, function(items) {
-                // chrome.storageにvalueが存在し、かつavatarを有してないもの
-                if (_.has(items, pathKey) && !$title.prev('img').get(0)) {
-                    $avatar = createAvatar(items[pathKey]);
-                    $title.before($avatar);
-                }
-            });
-        } else {
-            $.ajax({
-                method: 'GET',
-                url: path,
-                dataType: 'html'
-            }).done(function (data) {
-                // アバター画像のパスの生成
-                var avatarUrl = $(data).find('.avatar').attr('src').replace('s=420', 's=140');
-                
-                // <img>を生成
-                $avatar = createAvatar(avatarUrl);
-                $title.before($avatar);
-
-                // chrome.storageにpathを貯めとく
-                storageData[pathKey] = avatarUrl;
-                sync.set(storageData);
-            });
-        }
-        paths.push(path);
+  var cachedKeys = [];
+  var sync = chrome.storage.sync;
+  var dashboard = document.querySelector("#dashboard");
+  
+  function createAvatar(src) {
+    var avatar = document.createElement('img');
+    avatar.classList.add('g-avatar');
+    avatar.setAttribute('src', src);
+    return avatar;
+  }
+  
+  function showAvatar() {
+    var titles = dashboard.querySelectorAll('.simple > .title');
+    var $titles = _.map(titles, function(title) {
+      return $(title);
     });
-}
-
-// 初期ロード実行
-showAvatar();
-
-// [More]読み込み監視
-var node = document.querySelector('.news');
-if(node) {
+    _.each($titles, function($title) {
+      var url = $title.find('a').attr('href');
+      var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
+      var avatar = null;
+  
+      // 重複アカウントチェックchrome.storage参照
+      if(_.include(cachedKeys, url)) {
+        sync.get(url, function(items) {
+          // chrome.storageにvalueが存在し、かつavatarを有してないもの
+          if (_.has(items, url) && !_.first($title.prev('img'))) {
+            avatar = createAvatar(items[url]);
+            $title.before(avatar);
+          }
+        });
+      } else {
+        $.ajax({
+          method: 'GET',
+          url: "https://api.github.com/users/" + loginId,
+          dataType: 'json'
+        }).done(function(data) {
+          // <img>を生成
+          avatar = createAvatar(data.avatar_url);
+          $title.before(avatar);
+  
+          // chrome.storageにpathを貯めとく
+          var storageData = {};
+          storageData[url] = data.avatar_url;
+          sync.set(storageData);
+        });
+      }
+      cachedKeys.push(url);
+    });
+  }
+  
+  // 初期ロード実行
+  showAvatar();
+  
+  // [More]読み込み監視
+  var node = document.querySelector('.news');
+  if(node) {
     var observer = new WebKitMutationObserver(function () {
-        showAvatar();
+      showAvatar();
     });
     observer.observe(node, { childList: true });
-}
+  }
+
+})();
