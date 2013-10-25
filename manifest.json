@@ -1,6 +1,6 @@
 {
     "name": "gFaceee",
-    "version": "0.5.6",
+    "version": "0.6.0",
     "description": "Display avatar following on GitHub News Feed.",
     "permissions": ["storage", "*://*.github.com/*"],
     "icons": {
