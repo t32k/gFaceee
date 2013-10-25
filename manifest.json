@@ -1,6 +1,6 @@
 {
     "name": "gFaceee",
-    "version": "0.5.5",
+    "version": "0.6.0",
     "description": "Display avatar following on GitHub News Feed.",
     "permissions": ["storage", "*://*.github.com/*"],
     "icons": {
@@ -11,7 +11,7 @@
     "content_scripts": [{
         "matches": ["*://github.com/"],
         "css": ["contents.css"],
-        "js": ["lib/jquery.js", "lib/underscore.js", "contents.js"]
+        "js": ["lib/jquery.js", "lib/underscore.js", "lib/ImageEncoder.js", "contents.js"]
     }],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "manifest_version": 2
