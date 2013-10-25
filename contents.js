@@ -1,5 +1,6 @@
 (function() {
 
+  // キャッシュ先（syncでも動く）
   var chromeStorage = chrome.storage.local;
   var dashboard = document.querySelector("#dashboard");
 
@@ -20,18 +21,28 @@
    */
   function showAvatar() {
     
-    // get elements and wrap them as jQuery object
+    // 対象要素を取得しjQueryでラップする
     var titles = dashboard.querySelectorAll('.simple > .title');
     var $titles = _.map(titles, function(title) {
       return $(title);
     });
 
     _.each($titles, function($title) {
-      var url = $title.find('a').attr('href');
-      var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
-      getAvatar(url, loginId).then(function(avatar) {
-        $title.before(avatar);
-      });
+
+      // MutationObserver用に、まず画像が既に差し込まれているかどうかを判断する
+      if(!_.first($title.prev('img'))) {
+
+        // loop promise
+        var $defer = $.Deferred();
+        var url = $title.find('a').attr('href');
+        var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
+
+        // アバター画像を取得したら差し込む
+        getAvatar(url, loginId, $defer).done(function(avatar) {
+          $title.before(avatar);
+        });
+
+      }
     });
   }
 
@@ -41,35 +52,32 @@
    * @param {String} loginId
    * @returns {jQuery.promise}
    */
-  function getAvatar(url, loginId) {
-
-    // loop promise
-    var $defer = $.Deferred();
+  function getAvatar(url, loginId, $defer) {
 
     // 重複アカウントチェックchrome.storage参照
     chromeStorage.get(url, function(items) {
-      if (_.has(items, url) && !_.first($title.prev('img'))) {
-
+      if(_.has(items, url)) {
+        
         // chrome.storageにvalueが存在し、かつavatarを有してないもの
         var avatar = createAvatar(items[url]);
         $defer.resolve(avatar);
 
       } else {
         
-        // get user info
+        // ユーザー情報を取得する
         $.ajax({
           method: 'GET',
           url: "https://api.github.com/users/" + loginId,
           dataType: 'json'
         }).done(function(data) {
             
-          // encode image into resized DataURI of png
+          // 画像をDataURIに変換する
           var encoder = new ImageEncoder(data.avatar_url);
           encoder.setSize(19, 19);
           encoder.getDataURI(function(datauri) {
 
-            // create img
-            var avatar = createAvatar(data.avatar_url);
+            // DataURIを使ってimgを作成
+            var avatar = createAvatar(datauri);
 
             // chrome.storageにpathを貯めとく
             var storageData = {};
