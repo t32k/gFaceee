@@ -4,6 +4,25 @@
   var chromeStorage = chrome.storage.local;
   var dashboard = document.querySelector("#dashboard");
 
+  // キャッシュの期限が過ぎているかどうか
+  var isExpired = false;
+  var date = new Date();
+  var expiredKey = 'gFaceeeExpiredDate';
+  chromeStorage.get(expiredKey, function(items) {
+    if(_.has(items, expiredKey)) {
+
+      // 保存されている月
+      var savedMonth = items[expiredKey] - 0;
+      if(date.getMonth() !== savedMonth) {
+
+        // 現在の月を保存
+        var expiredData = {};
+        expiredData[expiredKey] = date.getMonth();
+        chromeStorage.set(expiredData, function() {});
+      }
+    }
+  });
+  
   /**
    * Create img element
    * @param {String} src
@@ -56,7 +75,7 @@
 
     // 重複アカウントチェックchrome.storage参照
     chromeStorage.get(url, function(items) {
-      if(_.has(items, url)) {
+      if(_.has(items, url) && !isExpired) {
         
         // chrome.storageにvalueが存在し、かつavatarを有してないもの
         var avatar = createAvatar(items[url]);
