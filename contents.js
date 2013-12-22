@@ -73,7 +73,7 @@
             
           // 画像をDataURIに変換する
           var encoder = new ImageEncoder(data.avatar_url);
-          encoder.setSize(19, 19);
+          encoder.setSize(38, 38);
           encoder.getDataURI(function(datauri) {
 
             // DataURIを使ってimgを作成
