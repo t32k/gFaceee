@@ -15,7 +15,7 @@
     if(_.has(items, expiredKey)) {
       isNotCached = false;
       // 保存されている月
-      var savedMonth = items[expiredKey];
+      var savedMonth = items[expiredKey] - 0;
       if(date.getMonth() !== savedMonth) {
         // キャッシュを無効化する
         isExpired = true;
