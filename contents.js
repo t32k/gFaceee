@@ -6,20 +6,32 @@
 
   // キャッシュの期限が過ぎているかどうか
   var isExpired = false;
+  // ストレージにキー（実行された形跡）があるかどうか
+  var isNotCached = true;
   var date = new Date();
   var expiredKey = 'gFaceeeExpiredDate';
+
   chromeStorage.get(expiredKey, function(items) {
     if(_.has(items, expiredKey)) {
-
+      isNotCached = false;
       // 保存されている月
-      var savedMonth = items[expiredKey] - 0;
+      var savedMonth = items[expiredKey];
       if(date.getMonth() !== savedMonth) {
-
-        // 現在の月を保存
-        var expiredData = {};
-        expiredData[expiredKey] = date.getMonth();
-        chromeStorage.set(expiredData, function() {});
+        // キャッシュを無効化する
+        isExpired = true;
       }
+    } else {
+      // 未実行か、ストレージがクリアされてる
+      isNotCached = true;
+    }
+    
+    // 保存されている月と異なる場合は更新
+    // 未実行の場合も現在の月を保存
+    if (isExpired || isNotCached) {
+      // 現在の月を保存
+      var expiredData = {};
+      expiredData[expiredKey] = date.getMonth();
+      chromeStorage.set(expiredData, function() {});
     }
   });
   
@@ -76,13 +88,13 @@
     // 重複アカウントチェックchrome.storage参照
     chromeStorage.get(url, function(items) {
       if(_.has(items, url) && !isExpired) {
-        
+
         // chrome.storageにvalueが存在し、かつavatarを有してないもの
         var avatar = createAvatar(items[url]);
         $defer.resolve(avatar);
 
       } else {
-        
+
         // ユーザー情報を取得する
         $.ajax({
           method: 'GET',
@@ -112,7 +124,7 @@
     });
     return $defer.promise();
   }
-  
+
   // 初期ロード実行
   showAvatar();
   
