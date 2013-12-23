@@ -10,6 +10,7 @@
 
 ## Release History
 
++ 2013/12/23 - v0.7.0 - Enable cache expiring.
 + 2013/10/16 - v0.6.0 - Enable to cache avatar images.
 + 2013/10/16 - v0.5.5 - Fix bugs.
 + 2013/07/01 - v0.5.4 - Fix DOM Exception Error.
