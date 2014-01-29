@@ -1,0 +1,26 @@
+{
+  "name": "gFaceee",
+  "version": "0.7.1",
+  "description": "This is a Chrome Extension for GitHub News Feed.",
+  "main": "contents.js",
+  "scripts": {
+    "test": "grunt test",
+    "build-jquery": "cd node_modules/jquery && grunt custom:-sizzle,-wrap,-event/alias,-effects,-offset,-dimensions,-deprecated"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/t32k/gFaceee.git"
+  },
+  "author": "t32k",
+  "bugs": {
+    "url": "https://github.com/t32k/gFaceee/issues"
+  },
+  "homepage": "https://github.com/t32k/gFaceee",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.13",
+    "grunt-jsvalidate": "~0.2.2",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-sync-version": "~0.2.1"
+  }
+}

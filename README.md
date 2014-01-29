@@ -1,6 +1,6 @@
 # gFaceee
 
-> This is a Chrome Extensions for [GitHub News Feed](https://github.com/).
+> This is a Chrome Extension for [GitHub News Feed](https://github.com/).
 
 ![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
 
@@ -10,6 +10,7 @@
 
 ## Release History
 
++ 2014/01/29 - v0.7.1 - Update jQuery and some fix.
 + 2013/12/23 - v0.7.0 - Enable cache expiring.
 + 2013/10/16 - v0.6.0 - Enable to cache avatar images.
 + 2013/10/16 - v0.5.5 - Fix bugs.
