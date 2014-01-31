@@ -1,18 +1,32 @@
 {
-    "name": "gFaceee",
-    "version": "0.7.0",
-    "description": "Display avatar following on GitHub News Feed.",
-    "permissions": ["storage", "*://*.github.com/*"],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-    "content_scripts": [{
-        "matches": ["*://github.com/"],
-        "css": ["contents.css"],
-        "js": ["lib/jquery.js", "lib/underscore.js", "lib/ImageEncoder.js", "contents.js"]
-    }],
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-    "manifest_version": 2
+  "name": "gFaceee",
+  "version": "0.7.1",
+  "description": "Display avatar following on GitHub News Feed.",
+  "permissions": [
+    "storage",
+    "*://*.github.com/*"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://github.com/"
+      ],
+      "css": [
+        "contents.css"
+      ],
+      "js": [
+        "lib/jquery.js",
+        "lib/underscore.js",
+        "lib/ImageEncoder.js",
+        "contents.js"
+      ]
+    }
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "manifest_version": 2
 }
