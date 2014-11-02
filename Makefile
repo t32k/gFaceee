@@ -10,11 +10,13 @@ default: clean node_modules bower_components
 	@cp bower_components/underscore/underscore-min.js package/lib
 	@cp *.png package
 	@cp manifest.json package
+	@zip package.zip -r package
 
 clean:
 	@rm -r package
 	@rm -rf node_modules
 	@rm -rf bower_components
+	@rm package.zip
 
 node_modules: package.json
 	@npm install
