@@ -1,5 +1,7 @@
 (function () {
 
+  var MutationObserver = MutationObserver || WebKitMutationObserver;
+
   // キャッシュ先（syncでも動く）
   var chromeStorage = chrome.storage.local;
   var dashboard = document.querySelector("#dashboard");
@@ -48,24 +50,21 @@
   function showAvatar() {
     
     // 対象要素を取得しjQueryでラップする
-    var titles = dashboard.querySelectorAll('.simple > .title');
-    var $titles = _.map(titles, function (title) {
-      return $(title);
-    });
-
-    _.each($titles, function ($title) {
+    $('.simple > .title').each(function () {
+      
+      var $this = $(this);
 
       // MutationObserver用に、まず画像が既に差し込まれているかどうかを判断する
-      if(!_.first($title.prev('img'))) {
+      if(!_.first($this.prev('img'))) {
 
         // loop promise
         var $defer = $.Deferred();
-        var url = $title.find('a').attr('href');
+        var url = $this.find('a').attr('href');
         var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         // アバター画像を取得したら差し込む
         getAvatar(url, loginId, $defer).done(function (avatar) {
-          $title.before(avatar);
+          $this.before(avatar);
         });
 
       }
@@ -106,9 +105,9 @@
             var avatar = createAvatar(datauri);
 
             // chrome.storageにpathを貯めとく
-            var storageData = {};
-            storageData[url] = datauri;
-            chromeStorage.set(storageData, function () {
+            var data = {};
+            data[url] = datauri;
+            chromeStorage.set(data, function () {
               // go to next element
               $defer.resolve(avatar);
             });
@@ -126,7 +125,7 @@
   // [More]読み込み監視
   var node = document.querySelector('.news');
   if (node) {
-    var observer = new WebKitMutationObserver(function () {
+    var observer = new MutationObserver(function () {
       showAvatar();
     });
     observer.observe(node, {
