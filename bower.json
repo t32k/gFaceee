@@ -1,0 +1,21 @@
+{
+  "name": "gFaceee",
+  "version": "0.8.0",
+  "homepage": "https://github.com/t32k/gFaceee",
+  "authors": [
+    "1000ch <shogo.sensui@gmail.com>"
+  ],
+  "description": "Chrome Extension for displaying avatar on GitHub feed.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "underscore": "~1.7.0"
+  }
+}

@@ -1,37 +1,34 @@
 (function () {
 
+  var MutationObserver = MutationObserver || WebKitMutationObserver;
+
   // キャッシュ先（syncでも動く）
   var chromeStorage = chrome.storage.local;
   var dashboard = document.querySelector("#dashboard");
+  var expireKey = 'gFaceee_cacheAvailable';
+  var cacheAvailable = true;
 
-  // キャッシュの期限が過ぎているかどうか
-  var isExpired = false;
-  // ストレージにキー（実行された形跡）があるかどうか
-  var isNotCached = true;
-  var date = new Date();
-  var expiredKey = 'gFaceeeExpiredDate';
+  chromeStorage.get(expireKey, function (items) {
 
-  chromeStorage.get(expiredKey, function (items) {
-    if(_.has(items, expiredKey)) {
-      isNotCached = false;
-      // 保存されている月
-      var savedMonth = items[expiredKey] - 0;
-      if(date.getMonth() !== savedMonth) {
-        // キャッシュを無効化する
-        isExpired = true;
+    var now = Date.now();
+    
+    if(_.has(items, expireKey)) {
+      var old = items[expireKey] - 0;
+      if(now - old > 7 * 24 * 3600 * 1000) {
+        cacheAvailable = false;
       }
     } else {
       // 未実行か、ストレージがクリアされてる
-      isNotCached = true;
+      cacheAvailable = false;
     }
     
     // 保存されている月と異なる場合は更新
     // 未実行の場合も現在の月を保存
-    if (isExpired || isNotCached) {
+    if (!cacheAvailable) {
       // 現在の月を保存
-      var expiredData = {};
-      expiredData[expiredKey] = date.getMonth();
-      chromeStorage.set(expiredData, function () {});
+      var data = {};
+      data[expireKey] = now;
+      chromeStorage.set(data, function () {});
     }
   });
   
@@ -53,24 +50,21 @@
   function showAvatar() {
     
     // 対象要素を取得しjQueryでラップする
-    var titles = dashboard.querySelectorAll('.simple > .title');
-    var $titles = _.map(titles, function (title) {
-      return $(title);
-    });
-
-    _.each($titles, function ($title) {
+    $('.simple > .title').each(function () {
+      
+      var $this = $(this);
 
       // MutationObserver用に、まず画像が既に差し込まれているかどうかを判断する
-      if(!_.first($title.prev('img'))) {
+      if(!_.first($this.prev('img'))) {
 
         // loop promise
         var $defer = $.Deferred();
-        var url = $title.find('a').attr('href');
+        var url = $this.find('a').attr('href');
         var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         // アバター画像を取得したら差し込む
         getAvatar(url, loginId, $defer).done(function (avatar) {
-          $title.before(avatar);
+          $this.before(avatar);
         });
 
       }
@@ -87,7 +81,7 @@
 
     // 重複アカウントチェックchrome.storage参照
     chromeStorage.get(url, function (items) {
-      if(_.has(items, url) && !isExpired) {
+      if(_.has(items, url) && cacheAvailable) {
 
         // chrome.storageにvalueが存在し、かつavatarを有してないもの
         var avatar = createAvatar(items[url]);
@@ -111,9 +105,9 @@
             var avatar = createAvatar(datauri);
 
             // chrome.storageにpathを貯めとく
-            var storageData = {};
-            storageData[url] = datauri;
-            chromeStorage.set(storageData, function () {
+            var data = {};
+            data[url] = datauri;
+            chromeStorage.set(data, function () {
               // go to next element
               $defer.resolve(avatar);
             });
@@ -131,10 +125,12 @@
   // [More]読み込み監視
   var node = document.querySelector('.news');
   if (node) {
-    var observer = new WebKitMutationObserver(function () {
+    var observer = new MutationObserver(function () {
       showAvatar();
     });
-    observer.observe(node, { childList: true });
+    observer.observe(node, {
+      childList: true
+    });
   }
 
 })();
