@@ -3,6 +3,7 @@
   "version": "0.8.0",
   "homepage": "https://github.com/t32k/gFaceee",
   "authors": [
+    "t32k <ijok.ijok@gmail.com>",
     "1000ch <shogo.sensui@gmail.com>"
   ],
   "description": "Chrome Extension for displaying avatar on GitHub feed.",

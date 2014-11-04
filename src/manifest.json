@@ -7,9 +7,9 @@
     "*://*.github.com/*"
   ],
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
   "content_scripts": [
     {
@@ -17,13 +17,13 @@
         "*://github.com/"
       ],
       "css": [
-        "contents.css"
+        "css/contents.css"
       ],
       "js": [
-        "lib/jquery.min.js",
-        "lib/underscore-min.js",
-        "lib/image-encoder.js",
-        "contents.js"
+        "js/lib/jquery.min.js",
+        "js/lib/underscore-min.js",
+        "js/lib/image-encoder.js",
+        "js/contents.js"
       ]
     }
   ],

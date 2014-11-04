@@ -2,14 +2,16 @@ bower = ./node_modules/.bin/bower
 
 default: clean node_modules bower_components
 	@mkdir package
-	@mkdir -p package/lib
-	@cp contents.css package
-	@cp contents.js package
-	@cp image-encoder.js package/lib
-	@cp bower_components/jquery/dist/jquery.min.js package/lib
-	@cp bower_components/underscore/underscore-min.js package/lib
-	@cp *.png package
-	@cp manifest.json package
+	@mkdir -p package/img
+	@mkdir -p package/css
+	@mkdir -p package/js/lib
+	@cp src/css/contents.css package/css
+	@cp src/js/contents.js package/js
+	@cp src/js/lib/image-encoder.js package/js/lib
+	@cp bower_components/jquery/dist/jquery.min.js package/js/lib
+	@cp bower_components/underscore/underscore-min.js package/js/lib
+	@cp src/img/*.png package/img
+	@cp src/manifest.json package
 	@zip package.zip -r package
 
 clean:
