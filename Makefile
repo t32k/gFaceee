@@ -1,10 +1,18 @@
 bower = ./node_modules/.bin/bower
 
-default: clean node_modules bower_components
+default: clean build
+
+clean:
+	@rm -rf package
+	@rm -rf node_modules
+	@rm -rf bower_components
+	@rm -f package.zip
 	@mkdir package
 	@mkdir -p package/img
 	@mkdir -p package/css
 	@mkdir -p package/js/lib
+
+build: node_modules bower_components
 	@cp src/css/contents.css package/css
 	@cp src/js/contents.js package/js
 	@cp src/js/lib/image-encoder.js package/js/lib
@@ -13,12 +21,6 @@ default: clean node_modules bower_components
 	@cp src/img/*.png package/img
 	@cp src/manifest.json package
 	@zip package.zip -r package
-
-clean:
-	@rm -rf package
-	@rm -rf node_modules
-	@rm -rf bower_components
-	@rm -f package.zip
 
 node_modules: package.json
 	@npm install
