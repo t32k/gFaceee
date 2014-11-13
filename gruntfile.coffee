@@ -13,7 +13,7 @@ module.exports = (grunt) ->
         files:
           src: ['<%=jshint.all%>']
     version:
-      files: ['manifest.json', 'bower.json']
+      files: ['./src/manifest.json', 'bower.json']
 
   grunt.loadNpmTasks 'grunt-contrib-jshint'
   grunt.loadNpmTasks 'grunt-jsvalidate'

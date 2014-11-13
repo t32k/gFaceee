@@ -2,7 +2,7 @@
 
 > This is a Chrome Extension for [GitHub News Feed](https://github.com/).
 
-![Screen Shot](https://raw.github.com/t32k/gFaceee/master/img/_preview.png "Preview")
+![Screen Shot](https://raw.github.com/t32k/gFaceee/master/preview.png "Preview")
 
 ## Download
 
