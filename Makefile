@@ -15,10 +15,10 @@ default: clean node_modules bower_components
 	@zip package.zip -r package
 
 clean:
-	@rm -r package
+	@rm -rf package
 	@rm -rf node_modules
 	@rm -rf bower_components
-	@rm package.zip
+	@rm -f package.zip
 
 node_modules: package.json
 	@npm install
