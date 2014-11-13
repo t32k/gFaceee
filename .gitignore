@@ -4,3 +4,5 @@ node_modules
 bower_components
 package
 package.zip
+src/js/lib/jquery.min.js
+src/js/lib/underscore-min.js
