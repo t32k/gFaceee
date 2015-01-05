@@ -6,9 +6,12 @@
    * @constructor
    */
   function ImageEncoder(path) {
-    this.filePath = path ? path : '';
-    this.canvas = document.createElement('canvas');
-    this.image = null;
+
+    if (!path) {
+      throw new Error('Invalid argument');
+    }
+
+    this.filePath = path;
     this.width = null;
     this.height = null;
   }
@@ -18,6 +21,11 @@
    * @param {String} path
    */
   ImageEncoder.prototype.setPath = function(path) {
+
+    if (!path) {
+      throw new Error('Invalid argument');
+    }
+
     this.filePath = path;
   };
 
@@ -27,47 +35,53 @@
    * @param {Number} height
    */
   ImageEncoder.prototype.setSize = function(width, height) {
-    this.width = width;
-    this.height = height;
+    this.width = width || 1;
+    this.height = height || 1;
   };
-
-  /**
-   * Release memory
-   */
-  ImageEncoder.prototype.dispose = function() {
-    this.canvas = null;
-    this.image = null;
-  };
-
+  
   /**
    * Generate datauri
-   * @param {Function} callback
+   * @returns {Promise}
    */
-  ImageEncoder.prototype.getDataURI = function(callback) {
-    if(!this.filePath) {
-      return null;
-    }
-    var that = this;
-    var onloadCallback = function(e) {
-      that.canvas.width = that.image.width;
-      that.canvas.height = that.image.height;
-      if(that.width) {
-        that.canvas.width = that.width;
-      }
-      if(that.height) {
-        that.canvas.height = that.height;
-      }
-      var context = that.canvas.getContext('2d');
-      context.drawImage(that.image, 0, 0, that.canvas.width, that.canvas.height);
-      callback(that.canvas.toDataURL('image/png', 1));
-      that.image.removeEventListener('load', onloadCallback);
-    };
-    this.image = new Image();
-    this.image.setAttribute('crossOrigin','anonymous');
-    this.image.addEventListener('load', onloadCallback);
-    this.image.src = this.filePath;
+  ImageEncoder.prototype.getDataURI = function () {
+
+    var width = this.width;
+    var height = this.height;
+    var filePath = this.filePath;
+
+    return new Promise(function (resolve, reject) {
+
+      var onLoad = function (e) {
+
+        var canvas = document.createElement('canvas');
+        canvas.width = width ? width : image.width;
+        canvas.height = height ? height : image.height;
+
+        var context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        image.removeEventListener('load', onLoad);
+        image.removeEventListener('error', onError);
+
+        resolve(canvas.toDataURL('image/png', 1));
+      };
+
+      var onError = function (e) {
+
+        image.removeEventListener('load', onLoad);
+        image.removeEventListener('error', onError);
+
+        reject(e);
+      };
+
+      var image = new Image();
+      image.setAttribute('crossOrigin','anonymous');
+      image.addEventListener('load', onLoad);
+      image.addEventListener('error', onError);
+      image.src = filePath;
+    });
   };
-  
+
   window.ImageEncoder = ImageEncoder;
-  
+
 })(window);
