@@ -20,9 +20,8 @@
         "css/contents.css"
       ],
       "js": [
-        "js/lib/jquery.min.js",
-        "js/lib/underscore-min.js",
         "js/lib/image-encoder.js",
+        "js/lib/fetch.js",
         "js/contents.js"
       ]
     }
