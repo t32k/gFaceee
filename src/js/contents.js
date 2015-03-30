@@ -138,4 +138,31 @@
     });
   }
 
+  function distinguishDate(jqObj) {
+    var elapsed = Date.now() - new Date(jqObj.attr('datetime'));
+    var day = 1000 * 60 * 60 * 24;
+    var week = day * 7;
+    var month = day * 30;
+    var half = day * 180;
+    var displayColor;
+
+    if (elapsed < week) {
+      displayColor = '#98c611'; // Green
+    } else if (elapsed < month) {
+      displayColor = '#d8b024'; // Yellow
+    } else if (elapsed < half) {
+      displayColor = '#f58142'; // Orange
+    } else {
+      displayColor = '#d9634d'; // Red
+    }
+
+    $updated.css({'color': displayColor, 'font-weight': 'bold'});
+  }
+
+  var $updated = $('.updated');
+  if ($updated) {
+    distinguishDate($updated);
+  }
+
 })();
+
