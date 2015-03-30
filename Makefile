@@ -7,11 +7,12 @@ clean:
 	@mkdir package
 	@mkdir -p package/img
 	@mkdir -p package/css
+	@mkdir -p package/js/dist
 	@mkdir -p package/js/lib
 
 build: node_modules
 	@cp src/css/contents.css package/css
-	@cp src/js/contents.js package/js
+	@cp src/js/dist/contents.js package/js/dist
 	@cp src/js/lib/image-encoder.js package/js/lib
 	@cp src/js/lib/fetch.js package/js/lib
 	@cp src/img/*.png package/img
