@@ -139,6 +139,10 @@
     });
   }
 
+  /**
+   * distinguish latest commit time
+   * @param {object} DOMElement
+   */
   function distinguishDate(element) {
     var elapsed = Date.now() - new Date(element.getAttribute('datetime'));
     var day = 1000 * 60 * 60 * 24;

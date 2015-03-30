@@ -1,6 +1,4 @@
-.simple > .title {
-  margin-left: 25px;
-}
+.simple > .title { margin-left: 25px; }
 .body .simple:after {
   content: "";
   display: block;
