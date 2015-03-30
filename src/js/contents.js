@@ -1,7 +1,5 @@
 (function () {
 
-  var MutationObserver = MutationObserver || WebKitMutationObserver;
-
   // キャッシュ先（syncでも動く）
   var chromeStorage = chrome.storage.local;
   var dashboard = document.querySelector("#dashboard");
@@ -12,7 +10,7 @@
 
     var now = Date.now();
 
-    if (_.has(items, expireKey)) {
+    if (items.hasOwnProperty(expireKey)) {
       var old = items[expireKey] - 0;
       if(now - old > 7 * 24 * 3600 * 1000) {
         cacheAvailable = false;
@@ -49,24 +47,24 @@
    */
   function showAvatar() {
 
-    // 対象要素を取得しjQueryでラップする
-    $('.simple > .title').each(function () {
+    var elements = document.querySelectorAll('.simple > .title');
+    
+    Array.prototype.forEach.call(elements, function (element) {
+      
+      var beforeNodeType = element.previousSibling.nodeType;
 
-      var $this = $(this);
-
-      // MutationObserver用に、まず画像が既に差し込まれているかどうかを判断する
-      if(!_.first($this.prev('img'))) {
-
-        // loop promise
-        var url = $this.find('a').attr('href');
+      if (beforeNodeType !== Node.ELEMENT_NODE ||
+          beforeNodeType === Node.ELEMENT_NODE && element.previousSibling.tagName.toLowerCase() !== 'img') {
+        
+        var url = element.querySelector('a').href;
         var loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         // アバター画像を取得したら差し込む
         getAvatar(url, loginId).then(function (avatar) {
-          $this.before(avatar);
+          element.parentNode.insertBefore(avatar, element);
         });
-
       }
+      
     });
   }
 
@@ -83,7 +81,7 @@
       // 重複アカウントチェックchrome.storage参照
       chromeStorage.get(url, function (items) {
 
-        if(_.has(items, url) && cacheAvailable) {
+        if(items.hasOwnProperty(url) && cacheAvailable) {
 
           // chrome.storageにvalueが存在し、かつavatarを有してないもの
           var avatar = createAvatar(items[url]);
@@ -93,16 +91,20 @@
         } else {
 
           // ユーザー情報を取得する
-          $.ajax({
-            method: 'GET',
-            url: "https://api.github.com/users/" + loginId,
-            dataType: 'json'
-          }).done(function (data) {
+          fetch('https://api.github.com/users/' + loginId)
 
-            // 画像をDataURIに変換する
-            var encoder = new ImageEncoder(data.avatar_url);
-            encoder.setSize(38, 38);
-            encoder.getDataURI().then(function (datauri) {
+            .then(function (response) {
+
+              return response.json();
+
+            }).then(function (data) {
+
+              // 画像をDataURIに変換する
+              var encoder = new ImageEncoder(data.avatar_url);
+              encoder.setSize(38, 38);
+              return encoder.getDataURI();
+
+            }).then(function (datauri) {
 
               // DataURIを使ってimgを作成
               var avatar = createAvatar(datauri);
@@ -115,10 +117,9 @@
                 resolve(avatar);
               });
 
-            }, function (error) {
+            }).catch(function (error) {
               reject(error);
             });
-          });
         }
       });
     });
@@ -138,8 +139,8 @@
     });
   }
 
-  function distinguishDate(jqObj) {
-    var elapsed = Date.now() - new Date(jqObj.attr('datetime'));
+  function distinguishDate(element) {
+    var elapsed = Date.now() - new Date(element.getAttribute('datetime'));
     var day = 1000 * 60 * 60 * 24;
     var week = day * 7;
     var month = day * 30;
@@ -156,12 +157,13 @@
       displayColor = '#d9634d'; // Red
     }
 
-    $updated.css({'color': displayColor, 'font-weight': 'bold'});
+    element.style.color = displayColor;
+    element.style.fontWeight = 'bold';
   }
 
-  var $updated = $('.updated');
-  if ($updated) {
-    distinguishDate($updated);
+  var updated = document.querySelector('.updated');
+  if (updated) {
+    distinguishDate(updated);
   }
 
 })();
