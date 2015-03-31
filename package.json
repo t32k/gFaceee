@@ -3,7 +3,9 @@
   "version": "0.9.0",
   "description": "A Chrome Extension for displaying avatar on GitHub feed.",
   "scripts": {
-    "build": "make"
+    "postinstall": "gulp build",
+    "start": "gulp watch",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -16,6 +18,8 @@
   "homepage": "https://github.com/t32k/gFaceee",
   "devDependencies": {
     "gulp": "^3.8.11",
-    "gulp-babel": "^4.0.1"
+    "gulp-babel": "^4.0.1",
+    "gulp-csso": "^1.0.0",
+    "gulp-uglify": "^1.1.0"
   }
 }
