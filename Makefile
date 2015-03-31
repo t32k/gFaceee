@@ -10,7 +10,8 @@ build: ./dist
 
 ./dist: ./node_modules
 	@npm run build
+	@touch ./dist
 
 ./node_modules: package.json
 	@npm install
-	@touch dist
+	@touch ./node_modules
