@@ -22,7 +22,7 @@
       "js": [
         "js/lib/image-encoder.js",
         "js/lib/fetch.js",
-        "js/dist/contents.js"
+        "js/contents.js"
       ]
     }
   ],
