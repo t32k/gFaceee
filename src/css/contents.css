@@ -1,6 +1,4 @@
-.simple > .title {
-  margin-left: 25px;
-}
+.simple > .title { margin-left: 25px; }
 .body .simple:after {
   content: "";
   display: block;
@@ -23,3 +21,9 @@
 .news .alert:first-child .body .simple:after {
   top: 0;
 }
+.bold { font-weight: bold !important; }
+.g-lime { color: #4ac41c; }
+.g-green { color: #98c611; }
+.g-yellow { color: #d8b024; }
+.g-orange { color: #f58142; }
+.g-red { color: #d9634d; }

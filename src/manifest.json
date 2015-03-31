@@ -1,6 +1,6 @@
 {
   "name": "gFaceee",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A Chrome Extension for displaying avatar on GitHub feed.",
   "permissions": [
     "storage",
@@ -22,7 +22,7 @@
       "js": [
         "js/lib/image-encoder.js",
         "js/lib/fetch.js",
-        "js/contents.js"
+        "js/dist/contents.js"
       ]
     }
   ],

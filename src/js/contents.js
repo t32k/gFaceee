@@ -139,26 +139,32 @@
     });
   }
 
+  /**
+   * distinguish latest commit time
+   * @param {object} DOMElement
+   */
   function distinguishDate(element) {
     var elapsed = Date.now() - new Date(element.getAttribute('datetime'));
     var day = 1000 * 60 * 60 * 24;
     var week = day * 7;
     var month = day * 30;
     var half = day * 180;
-    var displayColor;
+    var year = day * 365;
+    var styleClass;
 
     if (elapsed < week) {
-      displayColor = '#98c611'; // Green
+      styleClass = 'g-lime';
     } else if (elapsed < month) {
-      displayColor = '#d8b024'; // Yellow
+      styleClass = 'g-green';
     } else if (elapsed < half) {
-      displayColor = '#f58142'; // Orange
+      styleClass = 'g-yellow';
+    } else if (elapsed < year) {
+      styleClass = 'g-orange';
     } else {
-      displayColor = '#d9634d'; // Red
+      styleClass = 'g-red';
     }
 
-    element.style.color = displayColor;
-    element.style.fontWeight = 'bold';
+    element.classList.add(styleClass, 'bold');
   }
 
   var updated = document.querySelector('.updated');
