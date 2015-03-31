@@ -2,18 +2,17 @@
   
   'use strict';
 
-  // キャッシュ先（syncでも動く）
-  let chromeStorage = chrome.storage.local;
-  let expireKey = 'gFaceee_cacheAvailable';
-  let cacheAvailable = true;
+  const chromeStorage = chrome.storage.local;
+  const EXPIRE_KEY    = 'gFaceee_cacheAvailable';
+  let cacheAvailable  = true;
 
-  chromeStorage.get(expireKey, (items) => {
+  chromeStorage.get(EXPIRE_KEY, (items) => {
 
     let now = Date.now();
 
-    if (items.hasOwnProperty(expireKey)) {
+    if (items.hasOwnProperty(EXPIRE_KEY)) {
 
-      let old = Number(items[expireKey]);
+      let old = Number(items[EXPIRE_KEY]);
       if (now - old > 7 * 24 * 3600 * 1000) {
         cacheAvailable = false;
       }
@@ -28,7 +27,7 @@
     if (!cacheAvailable) {
       // 現在の月を保存
       let data = {};
-      data[expireKey] = now;
+      data[EXPIRE_KEY] = now;
       chromeStorage.set(data, () => {});
     }
   });
@@ -55,12 +54,12 @@
     let avatars  = {};
 
     promises = Array.prototype.map.call(elements, (element) => {
-      
-      let previousNode     = element.previousSibling;
-      let previousNodeType = previousNode.nodeType;
 
-      if (previousNodeType !== Node.ELEMENT_NODE ||
-          previousNodeType === Node.ELEMENT_NODE && previousNode.tagName.toLowerCase() !== 'img') {
+      let node     = element.previousSibling;
+      let nodeType = node.nodeType;
+
+      if (nodeType !== Node.ELEMENT_NODE ||
+          nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() !== 'img') {
         
         let url = element.querySelector('a').href;
         let loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
@@ -73,7 +72,6 @@
           })
           .catch((error) => console.log(error));
       }
-      
     });
 
     Promise.all(promises).then(() => {
@@ -96,21 +94,18 @@
       chromeStorage.get(url, (items) => {
 
         if (items.hasOwnProperty(url) && cacheAvailable) {
-
           resolve(items[url]);
-
-        } else {
-
-          fetch(`https://api.github.com/users/${loginId}`)
-            .then((response) => response.json())
-            .then((data) => {
-              let encoder = new ImageEncoder(data.avatar_url);
-              encoder.setSize(38, 38);
-              return encoder.getDataURI();
-            })
-            .then((datauri) => resolve(datauri))
-            .catch((error) => reject(error));
         }
+
+        fetch(`https://api.github.com/users/${loginId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            let encoder = new ImageEncoder(data.avatar_url);
+            encoder.setSize(38, 38);
+            return encoder.getDataURI();
+          })
+          .then((datauri) => resolve(datauri))
+          .catch((error) => reject(error));
       });
     });
   }
@@ -121,13 +116,13 @@
    */
   function distinguishDate(element) {
 
-    var elapsed = Date.now() - new Date(element.getAttribute('datetime'));
-    var day = 1000 * 60 * 60 * 24;
-    var week = day * 7;
-    var month = day * 30;
-    var half = day * 180;
-    var year = day * 365;
-    var styleClass = '';
+    let elapsed = Date.now() - new Date(element.getAttribute('datetime'));
+    let day = 1000 * 60 * 60 * 24;
+    let week = day * 7;
+    let month = day * 30;
+    let half = day * 180;
+    let year = day * 365;
+    let styleClass = '';
 
     if (elapsed < week) {
       styleClass = 'g-lime';
