@@ -52,7 +52,7 @@
 
     let elements = document.querySelectorAll('.simple > .title');
 
-    for (let element of elements) {
+    Array.prototype.forEach.call(elements, function(element) {
       
       let beforeNode     = element.previousSibling;
       let beforeNodeType = beforeNode.nodeType;
@@ -69,7 +69,7 @@
         });
       }
       
-    }
+    });
   }
 
   /**
