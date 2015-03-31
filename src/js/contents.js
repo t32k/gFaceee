@@ -51,29 +51,40 @@
   function showAvatar() {
 
     let elements = document.querySelectorAll('.simple > .title');
+    let promises = [];
+    let avatars  = {};
 
-    Array.prototype.forEach.call(elements, function(element) {
+    promises = Array.prototype.map.call(elements, (element) => {
       
-      let beforeNode     = element.previousSibling;
-      let beforeNodeType = beforeNode.nodeType;
+      let previousNode     = element.previousSibling;
+      let previousNodeType = previousNode.nodeType;
 
-      if (beforeNodeType !== Node.ELEMENT_NODE ||
-          beforeNodeType === Node.ELEMENT_NODE && beforeNode.tagName.toLowerCase() !== 'img') {
+      if (previousNodeType !== Node.ELEMENT_NODE ||
+          previousNodeType === Node.ELEMENT_NODE && previousNode.tagName.toLowerCase() !== 'img') {
         
         let url = element.querySelector('a').href;
         let loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
-        // アバター画像を取得したら差し込む
-        getAvatar(url, loginId).then((avatar) => {
-          element.parentNode.insertBefore(avatar, element);
-        });
+        return getAvatar(url, loginId)
+          .then((dataURI) => {
+            let avatar = createAvatar(dataURI);
+            element.parentNode.insertBefore(avatar, element);
+            avatars[url] = dataURI;
+          })
+          .catch((error) => console.log(error));
       }
       
+    });
+
+    Promise.all(promises).then(() => {
+      chromeStorage.set(avatars, () => {
+        console.log('Cache saved');
+      });
     });
   }
 
   /**
-   * get avatar from Gravatar or cached DataURI
+   * Get avatar element from Gravatar or cached dataURI
    * @param {String} url
    * @param {String} loginId
    * @returns {Promise}
@@ -82,46 +93,23 @@
 
     return new Promise((resolve, reject) => {
 
-      // 重複アカウントチェックchrome.storage参照
       chromeStorage.get(url, (items) => {
 
-        if(items.hasOwnProperty(url) && cacheAvailable) {
+        if (items.hasOwnProperty(url) && cacheAvailable) {
 
-          // chrome.storageにvalueが存在し、かつavatarを有してないもの
-          let avatar = createAvatar(items[url]);
-          resolve(avatar);
+          resolve(items[url]);
 
         } else {
 
-          // ユーザー情報を取得する
           fetch(`https://api.github.com/users/${loginId}`)
-          .then((response) => {
-
-            return response.json();
-
-          }).then((data) => {
-
-            // 画像をDataURIに変換する
-            let encoder = new ImageEncoder(data.avatar_url);
-            encoder.setSize(38, 38);
-            return encoder.getDataURI();
-
-          }).then((datauri) => {
-
-            // DataURIを使ってimgを作成
-            let avatar = createAvatar(datauri);
-
-            // chrome.storageにpathを貯めとく
-            let data = {};
-            data[url] = datauri;
-            chromeStorage.set(data, () => {
-              // go to next element
-              resolve(avatar);
-            });
-
-          }).catch((error) => {
-            reject(error);
-          });
+            .then((response) => response.json())
+            .then((data) => {
+              let encoder = new ImageEncoder(data.avatar_url);
+              encoder.setSize(38, 38);
+              return encoder.getDataURI();
+            })
+            .then((datauri) => resolve(datauri))
+            .catch((error) => reject(error));
         }
       });
     });
@@ -132,13 +120,14 @@
    * @param {Node} element
    */
   function distinguishDate(element) {
+
     var elapsed = Date.now() - new Date(element.getAttribute('datetime'));
     var day = 1000 * 60 * 60 * 24;
     var week = day * 7;
     var month = day * 30;
     var half = day * 180;
     var year = day * 365;
-    var styleClass;
+    var styleClass = '';
 
     if (elapsed < week) {
       styleClass = 'g-lime';
@@ -161,9 +150,7 @@
   // [More]読み込み監視
   let news = document.querySelector('.news');
   if (news) {
-    let observer = new MutationObserver(() => {
-      showAvatar();
-    });
+    let observer = new MutationObserver(() => showAvatar());
     observer.observe(news, {
       childList: true
     });
