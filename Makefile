@@ -3,10 +3,8 @@ default: clean build
 clean:
 	@rm -rf dist
 	@rm -f dist.zip
-	@mkdir dist
-	@mkdir -p dist/img
-	@mkdir -p dist/css
-	@mkdir -p dist/js/lib
+	@mkdir -p {dist/img,dist/css,dist/js/lib}
 
 build: 
+	@npm run build
 	@zip dist.zip -r dist
