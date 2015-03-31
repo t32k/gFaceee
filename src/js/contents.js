@@ -94,18 +94,21 @@
       chromeStorage.get(url, (items) => {
 
         if (items.hasOwnProperty(url) && cacheAvailable) {
-          resolve(items[url]);
-        }
 
-        fetch(`https://api.github.com/users/${loginId}`)
-          .then((response) => response.json())
-          .then((data) => {
-            let encoder = new ImageEncoder(data.avatar_url);
-            encoder.setSize(38, 38);
-            return encoder.getDataURI();
-          })
-          .then((datauri) => resolve(datauri))
-          .catch((error) => reject(error));
+          resolve(items[url]);
+
+        } else {
+
+          fetch(`https://api.github.com/users/${loginId}`)
+            .then((response) => response.json())
+            .then((data) => {
+              let encoder = new ImageEncoder(data.avatar_url);
+              encoder.setSize(38, 38);
+              return encoder.getDataURI();
+            })
+            .then((datauri) => resolve(datauri))
+            .catch((error) => reject(error));
+        }
       });
     });
   }
