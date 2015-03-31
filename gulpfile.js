@@ -41,7 +41,7 @@ gulp.task('css', function () {
 
 gulp.task('copy', function () {
   
-  gulp.src('src/manifest.json').pipe(gulp.dest('dist/manifest.json'));
+  gulp.src('src/manifest.json').pipe(gulp.dest('dist/'));
   gulp.src('src/img/*.png').pipe(gulp.dest('dist/img'));
   
 });
