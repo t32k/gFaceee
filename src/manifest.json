@@ -1,5 +1,6 @@
 {
-  "name": "gFaceee",
+  "name": "gFaceee for better GitHub UI",
+  "short_name": "gFaceee",
   "version": "0.10.0",
   "description": "A Chrome Extension for better GitHub UI.",
   "permissions": [
