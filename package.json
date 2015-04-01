@@ -5,7 +5,8 @@
   "scripts": {
     "postinstall": "gulp build",
     "start": "gulp watch",
-    "build": "gulp build"
+    "build": "gulp build",
+    "zip": "crx pack dist/ --zip-output dist.zip"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/t32k/gFaceee",
   "devDependencies": {
+    "crx": "^3.0.2",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.1",
     "gulp-csso": "^1.0.0",

@@ -3,3 +3,5 @@
 node_modules
 dist
 dist.zip
+gFaceee.crx
+npm-debug.log

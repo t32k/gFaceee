@@ -7,7 +7,8 @@ clean:
 	@mkdir -p {dist/img,dist/css,dist/js/lib}
 
 build: ./dist
-	@zip dist.zip -r ./dist
+	@rm -rf ./dist/key.pem gFaceee.crx
+	@npm run zip
 
 ./dist: ./node_modules
 	@npm run build
