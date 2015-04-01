@@ -2,6 +2,7 @@ default: clean build
 
 clean:
 	@rm -rf ./dist
+	@rm -rf ./node_modules
 	@rm -f dist.zip
 	@mkdir -p {dist/img,dist/css,dist/js/lib}
 
