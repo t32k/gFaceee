@@ -1,7 +1,7 @@
 {
   "name": "gFaceee",
-  "version": "0.9.0",
-  "description": "A Chrome Extension for displaying avatar on GitHub feed.",
+  "version": "0.10.0",
+  "description": "A Chrome Extension for better GitHub UI.",
   "scripts": {
     "postinstall": "gulp build",
     "start": "gulp watch",
@@ -11,7 +11,16 @@
     "type": "git",
     "url": "git://github.com/t32k/gFaceee.git"
   },
-  "author": "t32k",
+  "author": {
+    "name": "Koji Ishimoto",
+    "email": "ijok.ijok@gmail.com",
+    "web": "http://t32k.me/"
+  },
+  "maintainers": {
+    "name": "Shogo Sensui",
+    "email": "shogo.sensui@gmail.com",
+    "web": "http://github.com/1000ch"
+  },
   "bugs": {
     "url": "https://github.com/t32k/gFaceee/issues"
   },

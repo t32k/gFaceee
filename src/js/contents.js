@@ -139,7 +139,7 @@
       styleClass = 'g-red';
     }
 
-    element.classList.add(styleClass, 'bold');
+    element.classList.add(styleClass, 'g-bold');
   }
 
   // 初期ロード実行
