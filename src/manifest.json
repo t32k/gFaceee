@@ -1,7 +1,7 @@
 {
   "name": "gFaceee",
-  "version": "0.9.1",
-  "description": "A Chrome Extension for displaying avatar on GitHub feed.",
+  "version": "0.10.0",
+  "description": "A Chrome Extension for better GitHub UI.",
   "permissions": [
     "storage",
     "*://*.github.com/*"
