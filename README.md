@@ -2,13 +2,15 @@
 
 > This is a Chrome Extension for [GitHub](https://github.com/).
 
+[![Build Status](https://drone.io/github.com/t32k/gFaceee/status.png)](https://drone.io/github.com/t32k/gFaceee/latest)
+
 ## Features
 
 + Show user avatar on GitHub News feed.
 + Distinguish latest commit time on each repository home page.
 
-![Preview](http://i.imgur.com/jNpD1Qe.png)
+![Preview](http://i.imgur.com/jHB2HMc.png)
 
 ## Download
 
-+ [Chrome Web Store - gFaceee](https://chrome.google.com/webstore/detail/gfaces/fgkdbhnipaaeokfjgdmpejglfepclgbk)
++ [Chrome Web Store - gFaceee](http://goo.gl/GMxHkC)
