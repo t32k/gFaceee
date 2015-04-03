@@ -1,8 +1,6 @@
-# gFaceee
+# gFaceee [![Build Status](https://drone.io/github.com/t32k/gFaceee/status.png)](https://drone.io/github.com/t32k/gFaceee/latest)
 
 > This is a Chrome Extension for [GitHub](https://github.com/).
-
-[![Build Status](https://drone.io/github.com/t32k/gFaceee/status.png)](https://drone.io/github.com/t32k/gFaceee/latest)
 
 ## Features
 
