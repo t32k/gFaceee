@@ -3,34 +3,55 @@
   'use strict';
 
   const chromeStorage = chrome.storage.local;
-  const EXPIRE_KEY    = 'gFaceee_cacheAvailable';
-  let cacheAvailable  = true;
+  const map = Array.prototype.map;
 
-  chromeStorage.get(EXPIRE_KEY, (items) => {
+  const HOUR     = 60 * 60 * 1000;
+  const DAY      = HOUR * 24;
+  const WEEK     = DAY * 7;
+  const MONTH    = DAY * 30;
+  const HALFYEAR = MONTH * 6;
+  const YEAR     = DAY * 365;
 
-    let now = Date.now();
+  let cacheAvailable = true;
 
-    if (items.hasOwnProperty(EXPIRE_KEY)) {
+  function checkCacheAvailable() {
 
-      let old = Number(items[EXPIRE_KEY]);
-      if (now - old > 7 * 24 * 3600 * 1000) {
-        cacheAvailable = false;
-      }
+    return new Promise((resolve, reject) => {
 
-    } else {
-      // 未実行か、ストレージがクリアされてる
-      cacheAvailable = false;
-    }
+      const EXPIRE_KEY = 'gFaceee_cacheAvailable';
+      let isAvailable  = true;
 
-    // 保存されている月と異なる場合は更新
-    // 未実行の場合も現在の月を保存
-    if (!cacheAvailable) {
-      // 現在の月を保存
-      let data = {};
-      data[EXPIRE_KEY] = now;
-      chromeStorage.set(data, () => {});
-    }
-  });
+      chromeStorage.get(EXPIRE_KEY, (items) => {
+
+        if (!items.hasOwnProperty(EXPIRE_KEY)) {
+          // 未実行か、ストレージがクリアされてる
+          isAvailable = false;
+        }
+
+        let now = Date.now();
+        let old = Number(items[EXPIRE_KEY]);
+
+        if (now - old > WEEK) {
+          isAvailable = false;
+        }
+
+        // 保存されている月と異なる場合は更新
+        // 未実行の場合も現在の月を保存
+        if (!isAvailable) {
+
+          let data = {};
+          data[EXPIRE_KEY] = now;
+
+          chromeStorage.set(data, () => {
+            resolve(false);
+          });
+
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
 
   /**
    * Create img element
@@ -40,7 +61,7 @@
   function createAvatar(src) {
     let avatar = document.createElement('img');
     avatar.classList.add('g-avatar');
-    avatar.setAttribute('src', src);
+    avatar.src = src;
     return avatar;
   }
 
@@ -53,7 +74,7 @@
     let promises = [];
     let avatars  = {};
 
-    promises = Array.prototype.map.call(elements, (element) => {
+    promises = map.call(elements, (element) => {
 
       let node     = element.previousSibling;
       let nodeType = node.nodeType;
@@ -119,33 +140,32 @@
    */
   function distinguishDate(element) {
 
-    let elapsed = Date.now() - new Date(element.getAttribute('datetime'));
-    let day = 1000 * 60 * 60 * 24;
-    let week = day * 7;
-    let month = day * 30;
-    let half = day * 180;
-    let year = day * 365;
-    let styleClass = '';
+    let datetime = element.getAttribute('datetime');
+    let elapsed = Date.now() - new Date(datetime);
+    let className = '';
 
-    if (elapsed < week) {
-      styleClass = 'g-lime';
-    } else if (elapsed < month) {
-      styleClass = 'g-green';
-    } else if (elapsed < half) {
-      styleClass = 'g-yellow';
-    } else if (elapsed < year) {
-      styleClass = 'g-orange';
+    if (elapsed < WEEK) {
+      className = 'g-lime';
+    } else if (elapsed < MONTH) {
+      className = 'g-green';
+    } else if (elapsed < HALFYEAR) {
+      className = 'g-yellow';
+    } else if (elapsed < YEAR) {
+      className = 'g-orange';
     } else {
-      styleClass = 'g-red';
+      className = 'g-red';
     }
 
-    element.classList.add(styleClass, 'g-bold');
+    element.classList.add(className, 'g-bold');
   }
 
   // 初期ロード実行
-  showAvatar();
+  checkCacheAvailable().then((isAvailable) => {
+    cacheAvailable = isAvailable;
+    console.log('cache available:', cacheAvailable);
+    showAvatar();
+  });
 
-  // [More]読み込み監視
   let news = document.querySelector('.news');
   if (news) {
     let observer = new MutationObserver(() => showAvatar());
