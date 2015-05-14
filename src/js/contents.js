@@ -24,7 +24,6 @@
       chromeStorage.get(EXPIRE_KEY, (items) => {
 
         if (!items.hasOwnProperty(EXPIRE_KEY)) {
-          // 未実行か、ストレージがクリアされてる
           isAvailable = false;
         }
 
@@ -35,8 +34,6 @@
           isAvailable = false;
         }
 
-        // 保存されている月と異なる場合は更新
-        // 未実行の場合も現在の月を保存
         if (!isAvailable) {
 
           let data = {};
@@ -96,9 +93,7 @@
     });
 
     Promise.all(promises).then(() => {
-      chromeStorage.set(avatars, () => {
-        console.log('Cache saved');
-      });
+      chromeStorage.set(avatars, () => console.log('Cache saved'));
     });
   }
 
@@ -159,25 +154,68 @@
     element.classList.add(className, 'g-bold');
   }
 
-  // 初期ロード実行
-  checkCacheAvailable().then((isAvailable) => {
-    cacheAvailable = isAvailable;
-    console.log('cache available:', cacheAvailable);
-    showAvatar();
-  });
+  class Dispatcher {
+    constructor() {
+      this.routes = [];
+    }
+    add(path = '', action = function () {}) {
 
-  let news = document.querySelector('.news');
-  if (news) {
-    let observer = new MutationObserver(() => showAvatar());
-    observer.observe(news, {
-      childList: true
-    });
+      if (typeof path !== 'string') {
+        return this;
+      }
+
+      if (typeof action !== 'function') {
+        return this;
+      }
+
+      this.routes.push({
+        path: path,
+        action: action
+      });
+
+      return this;
+    }
+    dispatch(args = []) {
+
+      if (!Array.isArray(args)) {
+        args = [args];
+      }
+
+      let path = `${location.pathname}${location.search}`;
+
+      this.routes.forEach((route) => {
+        if (path.match(`^${route.path}$`)) {
+          route.action.apply(this, args);
+        }
+      });
+    }
   }
 
-  var updated = document.querySelector('.updated');
-  if (updated) {
-    distinguishDate(updated);
-  }
+  new Dispatcher()
+    .add('/', () => {
+      console.log('/')
+      checkCacheAvailable().then((isAvailable) => {
+        cacheAvailable = isAvailable;
+        showAvatar();
+      });
 
+      let news = document.querySelector('.news');
+      if (news) {
+        let observer = new MutationObserver(() => showAvatar());
+        observer.observe(news, {
+          childList: true
+        });
+      }
+    })
+    .add('/(.+)/(.+)', () => {
+      var updated = document.querySelector('.updated');
+      if (updated) {
+        distinguishDate(updated);
+      }
+    })
+    .add('/(.+)\?tab=activity', () => {
+      console.log('activity');
+    })
+    .dispatch();
 })();
 
