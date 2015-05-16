@@ -1,57 +1,26 @@
-import { ImageEncoder } from './image-encoder';
-import { Dispatcher } from './dispatcher';
+import ImageEncoder from './image-encoder';
+import Dispatcher   from './dispatcher';
+
+import {
+  HOUR,
+  DAY,
+  WEEK,
+  MONTH,
+  HALFYEAR,
+  YEAR
+} from './time';
+
+import {
+  checkCache,
+  getAvatar,
+  saveAvatar
+} from './chrome';
 
 (function () {
   
   'use strict';
 
-  const chromeStorage = chrome.storage.local;
-  const map = Array.prototype.map;
-
-  const HOUR     = 60 * 60 * 1000;
-  const DAY      = HOUR * 24;
-  const WEEK     = DAY * 7;
-  const MONTH    = DAY * 30;
-  const HALFYEAR = MONTH * 6;
-  const YEAR     = DAY * 365;
-
   let cacheAvailable = true;
-
-  function checkCacheAvailable() {
-
-    return new Promise((resolve, reject) => {
-
-      const EXPIRE_KEY = 'gFaceee_cacheAvailable';
-      let isAvailable  = true;
-
-      chromeStorage.get(EXPIRE_KEY, (items) => {
-
-        if (!items.hasOwnProperty(EXPIRE_KEY)) {
-          isAvailable = false;
-        }
-
-        let now = Date.now();
-        let old = Number(items[EXPIRE_KEY]);
-
-        if (now - old > WEEK) {
-          isAvailable = false;
-        }
-
-        if (!isAvailable) {
-
-          let data = {};
-          data[EXPIRE_KEY] = now;
-
-          chromeStorage.set(data, () => {
-            resolve(false);
-          });
-
-        } else {
-          resolve(true);
-        }
-      });
-    });
-  }
 
   /**
    * Create img element
@@ -72,9 +41,8 @@ import { Dispatcher } from './dispatcher';
 
     let elements = document.querySelectorAll('.simple > .title');
     let promises = [];
-    let avatars  = {};
 
-    promises = map.call(elements, (element) => {
+    promises = Array.prototype.map.call(elements, (element) => {
 
       let node     = element.previousSibling;
       let nodeType = node.nodeType;
@@ -85,19 +53,32 @@ import { Dispatcher } from './dispatcher';
         let url = element.querySelector('a').href;
         let loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
-        return getAvatar(url, loginId)
+        if (!cacheAvailable) {
+          return fetchAvatar(url, loginId)
+            then((dataURI) => {
+              let avatar = createAvatar(dataURI);
+              element.parentNode.insertBefore(avatar, element);
+              return saveAvatar(url, dataURI);
+            });
+        }
+
+        return getAvatar(url)
           .then((dataURI) => {
             let avatar = createAvatar(dataURI);
             element.parentNode.insertBefore(avatar, element);
-            avatars[url] = dataURI;
           })
-          .catch((error) => console.log(error));
+          .catch((error) => {
+            return fetchAvatar(url, loginId)
+              then((dataURI) => {
+                let avatar = createAvatar(dataURI);
+                element.parentNode.insertBefore(avatar, element);
+                return saveAvatar(url, dataURI);
+              });
+          });
       }
     });
 
-    Promise.all(promises).then(() => {
-      chromeStorage.set(avatars, () => console.log('Cache saved'));
-    });
+    return Promise.all(promises);
   }
 
   /**
@@ -106,32 +87,22 @@ import { Dispatcher } from './dispatcher';
    * @param {String} loginId
    * @returns {Promise}
    */
-  function getAvatar(url, loginId) {
+  function fetchAvatar(url, loginId) {
 
     return new Promise((resolve, reject) => {
-
-      chromeStorage.get(url, (items) => {
-
-        if (items.hasOwnProperty(url) && cacheAvailable) {
-
-          resolve(items[url]);
-
-        } else {
-
-          fetch(`https://api.github.com/users/${loginId}`)
-            .then((response) => response.json())
-            .then((data) => {
-              let encoder = new ImageEncoder(data.avatar_url);
-              encoder.setSize(38, 38);
-              return encoder.toDataURL();
-            })
-            .then((datauri) => resolve(datauri))
-            .catch((error) => reject(error));
-        }
-      });
+      fetch(`https://api.github.com/users/${loginId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          let encoder = new ImageEncoder(data.avatar_url);
+          encoder.setSize(38, 38);
+          return encoder.toDataURL();
+        })
+        .then((dataURI) => resolve(dataURI))
+        .catch((error) => reject(error));
     });
-  }
 
+  }
+  
   /**
    * distinguish latest commit time
    * @param {Node} element
@@ -159,14 +130,16 @@ import { Dispatcher } from './dispatcher';
 
   new Dispatcher()
     .add('/', () => {
-      checkCacheAvailable().then((isAvailable) => {
+      checkCache().then((isAvailable) => {
         cacheAvailable = isAvailable;
         showAvatar();
       });
 
       let news = document.querySelector('.news');
       if (news) {
-        let observer = new MutationObserver(() => showAvatar());
+        let observer = new MutationObserver(() => {
+          showAvatar();
+        });
         observer.observe(news, {
           childList: true
         });
