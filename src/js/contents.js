@@ -1,3 +1,6 @@
+import { ImageEncoder } from './image-encoder';
+import { Dispatcher } from './dispatcher';
+
 (function () {
   
   'use strict';
@@ -120,7 +123,7 @@
             .then((data) => {
               let encoder = new ImageEncoder(data.avatar_url);
               encoder.setSize(38, 38);
-              return encoder.getDataURI();
+              return encoder.toDataURL();
             })
             .then((datauri) => resolve(datauri))
             .catch((error) => reject(error));
@@ -154,46 +157,8 @@
     element.classList.add(className, 'g-bold');
   }
 
-  class Dispatcher {
-    constructor() {
-      this.routes = [];
-    }
-    add(path = '', action = function () {}) {
-
-      if (typeof path !== 'string') {
-        return this;
-      }
-
-      if (typeof action !== 'function') {
-        return this;
-      }
-
-      this.routes.push({
-        path: path,
-        action: action
-      });
-
-      return this;
-    }
-    dispatch(args = []) {
-
-      if (!Array.isArray(args)) {
-        args = [args];
-      }
-
-      let path = `${location.pathname}${location.search}`;
-
-      this.routes.forEach((route) => {
-        if (path.match(`^${route.path}$`)) {
-          route.action.apply(this, args);
-        }
-      });
-    }
-  }
-
   new Dispatcher()
     .add('/', () => {
-      console.log('/')
       checkCacheAvailable().then((isAvailable) => {
         cacheAvailable = isAvailable;
         showAvatar();
