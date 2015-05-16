@@ -1,33 +1,32 @@
 var gulp = require("gulp");
 
 gulp.task('watch', function () {
-  gulp.watch('src/js/contents.js', function () {
-    gulp.start('js:app');
+  gulp.watch('src/js/*.js', function () {
+    gulp.start('js');
   });
 });
 
 gulp.task('build', function () {
-  gulp.start('js:app', 'js:lib', 'css', 'copy');
+  gulp.start('js', 'css', 'copy');
 });
 
-gulp.task('js:app', function () {
+gulp.task('js', function () {
 
-  var babel = require('gulp-babel');
+  var browserify = require('browserify');
+  var babelify = require('babelify');
+  var source = require('vinyl-source-stream');
+  var buffer = require('vinyl-buffer');
   var uglify = require('gulp-uglify');
 
-  return gulp.src('src/js/contents.js')
-    .pipe(babel())
+  return browserify({
+    entries: ['src/js/contents.js'],
+    extensions: ['.js']
+  }).transform(babelify)
+    .bundle()
+    .pipe(source('contents.js'))
+    .pipe(buffer())
     .pipe(uglify())
     .pipe(gulp.dest("dist/js/"));
-});
-
-gulp.task("js:lib", function () {
-
-  var uglify = require('gulp-uglify');
-
-  return gulp.src('src/js/lib/*.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/js/lib'));
 });
 
 gulp.task('css', function () {

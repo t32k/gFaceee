@@ -21,8 +21,6 @@
         "css/contents.css"
       ],
       "js": [
-        "js/lib/image-encoder.js",
-        "js/lib/fetch.js",
         "js/contents.js"
       ]
     }
