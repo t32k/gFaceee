@@ -1,14 +1,6 @@
 import ImageEncoder from './image-encoder';
 import Dispatcher   from './dispatcher';
-
-import {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  HALFYEAR,
-  YEAR
-} from './time';
+import DateTime     from './datetime';
 
 import {
   checkCache,
@@ -40,9 +32,7 @@ import {
   function showAvatar() {
 
     let elements = document.querySelectorAll('.simple > .title');
-    let promises = [];
-
-    promises = Array.prototype.map.call(elements, (element) => {
+    let promises = Array.prototype.map.call(elements, (element) => {
 
       let node     = element.previousSibling;
       let nodeType = node.nodeType;
@@ -112,13 +102,13 @@ import {
     let elapsed = Date.now() - new Date(datetime);
     let className = '';
 
-    if (elapsed < WEEK) {
+    if (elapsed < DateTime.WEEK) {
       className = 'g-lime';
-    } else if (elapsed < MONTH) {
+    } else if (elapsed < DateTime.MONTH) {
       className = 'g-green';
-    } else if (elapsed < HALFYEAR) {
+    } else if (elapsed < DateTime.HALFYEAR) {
       className = 'g-yellow';
-    } else if (elapsed < YEAR) {
+    } else if (elapsed < DateTime.YEAR) {
       className = 'g-orange';
     } else {
       className = 'g-red';

@@ -1,4 +1,4 @@
-import { WEEK } from './time';
+import DateTime from './datetime';
 
 const Storage = chrome.storage.local;
 const EXPIRE_KEY = 'gFaceee_cacheAvailable';
@@ -18,7 +18,7 @@ export function checkCache() {
       let now = Date.now();
       let old = Number(items[EXPIRE_KEY]);
 
-      if (now - old > WEEK) {
+      if (now - old > DateTime.WEEK) {
         isAvailable = false;
       }
 
