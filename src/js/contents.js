@@ -51,10 +51,10 @@ import {
           nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() !== 'img') {
         
         let url = element.querySelector('a').href;
-        let loginId = url.substring(url.lastIndexOf('/')).replace('/', '');
+        let githubId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         if (!cacheAvailable) {
-          return fetchAvatar(url, loginId)
+          return fetchAvatar(githubId)
             then((dataURI) => {
               let avatar = createAvatar(dataURI);
               element.parentNode.insertBefore(avatar, element);
@@ -68,7 +68,7 @@ import {
             element.parentNode.insertBefore(avatar, element);
           })
           .catch((error) => {
-            return fetchAvatar(url, loginId)
+            return fetchAvatar(githubId)
               then((dataURI) => {
                 let avatar = createAvatar(dataURI);
                 element.parentNode.insertBefore(avatar, element);
@@ -82,15 +82,14 @@ import {
   }
 
   /**
-   * Get avatar element from Gravatar or cached dataURI
-   * @param {String} url
-   * @param {String} loginId
+   * Fetch avatar image and convert it into dataURI
+   * @param {String} githubId
    * @returns {Promise}
    */
-  function fetchAvatar(url, loginId) {
+  function fetchAvatar(githubId) {
 
     return new Promise((resolve, reject) => {
-      fetch(`https://api.github.com/users/${loginId}`)
+      fetch(`https://api.github.com/users/${githubId}`)
         .then((response) => response.json())
         .then((data) => {
           let encoder = new ImageEncoder(data.avatar_url);
