@@ -135,7 +135,7 @@ import {
       }
     })
     .add('/(.+)/(.+)', () => {
-      var updated = document.querySelector('.updated');
+      var updated = document.querySelector('.commit-tease time');
       if (updated) {
         distinguishDate(updated);
       }
