@@ -28,7 +28,7 @@
   "homepage": "https://github.com/t32k/gFaceee",
   "devDependencies": {
     "babelify": "^6.1.1",
-    "browserify": "^10.2.0",
+    "browserify": "^11.2.0",
     "crx": "^3.0.2",
     "gulp": "^3.8.11",
     "gulp-minify-css": "^1.2.1",
