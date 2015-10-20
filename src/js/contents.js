@@ -114,7 +114,7 @@ import {
       className = 'g-red';
     }
 
-    element.classList.add(className, 'g-bold');
+    element.classList.add(className, 'g-label');
   }
 
   new Dispatcher()
