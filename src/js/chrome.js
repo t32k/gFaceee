@@ -9,7 +9,7 @@ export function checkCache() {
 
     let isAvailable  = true;
 
-    Storage.get(EXPIRE_KEY, (items) => {
+    Storage.get(EXPIRE_KEY, items => {
 
       if (!items.hasOwnProperty(EXPIRE_KEY)) {
         isAvailable = false;
@@ -27,9 +27,7 @@ export function checkCache() {
         let data = {};
         data[EXPIRE_KEY] = now;
 
-        Storage.set(data, () => {
-          resolve(false);
-        });
+        Storage.set(data, () => resolve(false));
 
       } else {
         resolve(true);
@@ -38,33 +36,27 @@ export function checkCache() {
   });
 }
 
-export function getAvatar(url) {
+export function getAvatar(githubId) {
 
   return new Promise((resolve, reject) => {
 
-    Storage.get(url, (items) => {
-
-      if (items.hasOwnProperty(url)) {
-
-        resolve(items[url]);
-
+    Storage.get(`gFaceee-${githubId}`, items => {
+      let dataURI = items[`gFaceee-${githubId}`];
+      if (typeof dataURI === 'string') {
+        resolve(dataURI);
       } else {
-
-        reject(null);
-
+        reject();
       }
     });
   });
 }
 
-export function saveAvatar(url, dataURI) {
+export function saveAvatar(githubId, dataURI) {
 
   let data = {};
-  data[url] = dataURI;
+  data[`gFaceee-${githubId}`] = dataURI;
 
   return new Promise((resolve, reject) => {
-    Storage.set(data, () => {
-      resolve();
-    });
+    Storage.set(data, () => resolve());
   });
 }

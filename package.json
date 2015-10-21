@@ -1,6 +1,5 @@
 {
   "name": "gFaceee",
-  "version": "0.12.0",
   "description": "A Chrome Extension for better GitHub UI.",
   "scripts": {
     "postinstall": "gulp build",
