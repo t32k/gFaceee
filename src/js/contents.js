@@ -9,7 +9,7 @@ import {
 } from './chrome';
 
 (function () {
-  
+
   'use strict';
 
   let cacheAvailable = true;
@@ -32,34 +32,34 @@ import {
   function showAvatar() {
 
     let elements = document.querySelectorAll('.simple > .title');
-    let promises = Array.prototype.map.call(elements, (element) => {
+    let promises = Array.prototype.map.call(elements, element => {
 
       let node     = element.previousSibling;
       let nodeType = node.nodeType;
 
       if (nodeType !== Node.ELEMENT_NODE ||
           nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() !== 'img') {
-        
+
         let url = element.querySelector('a').href;
         let githubId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         if (!cacheAvailable) {
           return fetchAvatar(githubId)
-            then((dataURI) => {
+            then(dataURI => {
               let avatar = createAvatar(dataURI);
               element.parentNode.insertBefore(avatar, element);
               return saveAvatar(url, dataURI);
             });
         }
 
-        return getAvatar(url)
-          .then((dataURI) => {
+        return getAvatar(githubId)
+          .then(dataURI => {
             let avatar = createAvatar(dataURI);
             element.parentNode.insertBefore(avatar, element);
           })
-          .catch((error) => {
+          .catch(error => {
             return fetchAvatar(githubId)
-              then((dataURI) => {
+              then(dataURI => {
                 let avatar = createAvatar(dataURI);
                 element.parentNode.insertBefore(avatar, element);
                 return saveAvatar(url, dataURI);
@@ -80,18 +80,18 @@ import {
 
     return new Promise((resolve, reject) => {
       fetch(`https://api.github.com/users/${githubId}`)
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => response.json())
+        .then(data => {
           let encoder = new ImageEncoder(data.avatar_url);
           encoder.setSize(38, 38);
           return encoder.toDataURL();
         })
-        .then((dataURI) => resolve(dataURI))
-        .catch((error) => reject(error));
+        .then(dataURI => resolve(dataURI))
+        .catch(error => reject(error));
     });
 
   }
-  
+
   /**
    * distinguish latest commit time
    * @param {Node} element
@@ -119,23 +119,21 @@ import {
 
   new Dispatcher()
     .add('/', () => {
-      checkCache().then((isAvailable) => {
+      checkCache().then(isAvailable => {
         cacheAvailable = isAvailable;
         showAvatar();
       });
 
       let news = document.querySelector('.news');
       if (news) {
-        let observer = new MutationObserver(() => {
-          showAvatar();
-        });
+        let observer = new MutationObserver(() => showAvatar());
         observer.observe(news, {
           childList: true
         });
       }
     })
     .add('/(.+)/(.+)', () => {
-      var updated = document.querySelector('.commit-tease time');
+      let updated = document.querySelector('.commit-tease time');
       if (updated) {
         distinguishDate(updated);
       }
@@ -145,4 +143,3 @@ import {
     })
     .dispatch();
 })();
-

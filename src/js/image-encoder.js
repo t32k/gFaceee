@@ -15,7 +15,7 @@ export default class ImageEncoder {
 
     return new Promise((resolve, reject) => {
 
-      let onLoad = (e) => {
+      let onLoad = e => {
 
         let canvas = document.createElement('canvas');
         canvas.width = this.width ? this.width : image.width;
@@ -27,10 +27,10 @@ export default class ImageEncoder {
         image.removeEventListener('load', onLoad);
         image.removeEventListener('error', onError);
 
-        resolve(canvas.toDataURL('image/png', 1));
+        resolve(canvas.toDataURL());
       };
 
-      let onError = (e) => {
+      let onError = e => {
 
         image.removeEventListener('load', onLoad);
         image.removeEventListener('error', onError);
