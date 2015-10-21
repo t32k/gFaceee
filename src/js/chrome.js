@@ -40,8 +40,8 @@ export function getAvatar(githubId) {
 
   return new Promise((resolve, reject) => {
 
-    Storage.get(githubId, items => {
-      let dataURI = items[githubId];
+    Storage.get(`gFaceee-${githubId}`, items => {
+      let dataURI = items[`gFaceee-${githubId}`];
       if (typeof dataURI === 'string') {
         resolve(dataURI);
       } else {
@@ -54,7 +54,7 @@ export function getAvatar(githubId) {
 export function saveAvatar(githubId, dataURI) {
 
   let data = {};
-  data[githubId] = dataURI;
+  data[`gFaceee-${githubId}`] = dataURI;
 
   return new Promise((resolve, reject) => {
     Storage.set(data, () => resolve());

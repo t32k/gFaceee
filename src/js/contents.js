@@ -44,27 +44,23 @@ import {
         let githubId = url.substring(url.lastIndexOf('/')).replace('/', '');
 
         if (!cacheAvailable) {
-          return fetchAvatar(githubId)
-            then(dataURI => {
-              let avatar = createAvatar(dataURI);
-              element.parentNode.insertBefore(avatar, element);
-              return saveAvatar(url, dataURI);
-            });
-        }
-
-        return getAvatar(githubId)
-          .then(dataURI => {
+          return fetchAvatar(githubId).then(dataURI => {
             let avatar = createAvatar(dataURI);
             element.parentNode.insertBefore(avatar, element);
-          })
-          .catch(error => {
-            return fetchAvatar(githubId)
-              then(dataURI => {
-                let avatar = createAvatar(dataURI);
-                element.parentNode.insertBefore(avatar, element);
-                return saveAvatar(url, dataURI);
-              });
-          });
+            return saveAvatar(url, dataURI);
+          }).catch(error => console.error(error));
+        }
+
+        return getAvatar(githubId).then(dataURI => {
+          let avatar = createAvatar(dataURI);
+          element.parentNode.insertBefore(avatar, element);
+        }).catch(error => {
+          return fetchAvatar(githubId).then(dataURI => {
+            let avatar = createAvatar(dataURI);
+            element.parentNode.insertBefore(avatar, element);
+            return saveAvatar(url, dataURI);
+          }).catch(error => console.error(error));
+        });
       }
     });
 
