@@ -7,7 +7,7 @@
 + Show user avatar on GitHub News feed.
 + Distinguish latest commit time on each repository home page.
 
-![Preview](http://i.imgur.com/jHB2HMc.png)
+![Preview](preview.png)
 
 ## Download
 

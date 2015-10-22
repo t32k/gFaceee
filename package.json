@@ -16,11 +16,11 @@
     "email": "ijok.ijok@gmail.com",
     "web": "http://t32k.me/"
   },
-  "maintainers": {
-    "name": "Shogo Sensui",
-    "email": "shogo.sensui@gmail.com",
-    "web": "http://github.com/1000ch"
-  },
+  "contributors": [{
+      "name": "Shogo Sensui",
+      "email": "shogo.sensui@gmail.com",
+      "web": "http://github.com/1000ch"
+  }],
   "bugs": {
     "url": "https://github.com/t32k/gFaceee/issues"
   },

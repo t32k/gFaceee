@@ -11,7 +11,6 @@ gulp.task('build', function () {
 });
 
 gulp.task('js', function () {
-
     var browserify = require('browserify');
     var babelify = require('babelify');
     var source = require('vinyl-source-stream');
